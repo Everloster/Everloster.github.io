@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0f1117">
-  <meta name="description" content="EverAgent 与 EverAgent-infra：从公开知识研究到私有基础设施实践，积累可阅读、可追溯、可复用的 Personal Context。">
-  <title>EverAgent · 两个项目空间，一份个人上下文</title>
+  <meta name="description" content="EverAgent 开放知识库与 EverAgent-infra 个人实践底座：向外分享知识，向内沉淀上下文，让每次探索都成为下一次的起点。">
+  <title>EverAgent · 向外分享知识，向内沉淀上下文</title>
   <style>
     :root {
       color-scheme: dark;
@@ -143,6 +143,37 @@
       .cta .button { margin-top: 22px; }
       .footer-name span { display: block; margin-left: 0; margin-top: 3px; }
     }
+    .scroll-progress { position: fixed; inset: 0 0 auto; height: 2px; z-index: 20; background: transparent; pointer-events: none; }
+    .scroll-progress span { display: block; width: 100%; height: 100%; transform: scaleX(0); transform-origin: left; background: linear-gradient(90deg, var(--blue), var(--green)); }
+    .hero-actions { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .hero-actions .button { min-height: 44px; box-shadow: 0 10px 32px #7c9cff1c; }
+    .button-secondary { color: var(--fg); background: #171a22; border: 1px solid var(--line); box-shadow: none; }
+    .button-secondary:hover { background: #1d2230; border-color: var(--blue); }
+    .space, .principle { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .space:hover, .principle:hover { transform: translateY(-3px); border-color: #7c9cff55; box-shadow: 0 18px 50px #00000024; }
+    .space-private:hover { border-color: #59d3a455; }
+    button.space-art { width: 100%; padding: 0; cursor: zoom-in; }
+    .lightbox-open { min-height: 36px; padding: 3px 0; border: 0; background: none; color: var(--accent); cursor: pointer; font-size: 11px; }
+    .lightbox-open:hover { text-decoration: underline; }
+    dialog.lightbox { width: min(1180px, 94vw); max-width: none; max-height: 92vh; padding: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: var(--card); color: var(--fg); box-shadow: 0 30px 120px #000000aa; }
+    dialog.lightbox::backdrop { background: #05070bd9; backdrop-filter: blur(8px); }
+    .lightbox-shell { display: flex; flex-direction: column; max-height: 92vh; }
+    .lightbox-top, .lightbox-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 16px; }
+    .lightbox-top { border-bottom: 1px solid var(--line); }
+    .lightbox-top p { margin: 0; font-size: 12px; color: var(--muted); }
+    .lightbox-close { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; background: none; color: var(--fg); cursor: pointer; font-size: 20px; line-height: 1; }
+    .lightbox-close:hover { border-color: var(--blue); color: var(--blue); }
+    .lightbox-image { display: block; width: 100%; height: auto; max-height: calc(92vh - 116px); object-fit: contain; background: #080b12; }
+    .lightbox-foot { border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+    .lightbox-foot a { color: var(--blue); }
+    .lightbox-foot a:hover { text-decoration: underline; }
+    body.has-lightbox { overflow: hidden; }
+    @media (max-width: 620px) {
+      .hero-actions { flex-direction: column; align-items: stretch; margin-top: 25px; }
+      .hero-actions .button { justify-content: center; width: 100%; }
+      dialog.lightbox { width: 96vw; }
+      .lightbox-top, .lightbox-foot { padding: 10px 12px; }
+    }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { transition: none !important; }
@@ -150,6 +181,7 @@
   </style>
 </head>
 <body>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
   <a class="skip-link" href="#main">跳到正文</a>
   <div class="wrap">
     <header class="topbar">
@@ -165,58 +197,61 @@
 
     <main id="main">
       <section class="hero" id="vision" aria-labelledby="vision-title">
-        <p class="eyebrow">共同愿景 · Personal Context</p>
-        <h1 id="vision-title">两个项目空间，<br><span>一份持续生长的上下文。</span></h1>
-        <p class="hero-copy">从知识研究到真实实践，把经过验证的经验积累下来，供人阅读，也让未来的 AI Agent 持续复用。</p>
+        <p class="eyebrow">开放知识 × 个人上下文</p>
+        <h1 id="vision-title">向外分享知识，<br><span>向内沉淀上下文。</span></h1>
+        <p class="hero-copy">EverAgent 是开放知识库，EverAgent-infra 是个人实践底座。把每一次探索、验证与经验，都积累成下一次的起点。</p>
         <ol class="workflow" aria-label="持续积累的工作循环">
           <li>01 <b>探索问题</b></li>
           <li>02 <b>阅读与实践</b></li>
           <li>03 <b>验证并沉淀</b></li>
           <li>04 <b>按需复用</b></li>
         </ol>
-        <a class="hero-link" href="#spaces">认识这两个空间 <span aria-hidden="true">↓</span></a>
+        <div class="hero-actions">
+          <a class="button" href="https://github.com/Everloster/EverAgent" target="_blank" rel="noopener noreferrer">进入开放知识库 <span aria-hidden="true">↗</span></a>
+          <a class="button button-secondary" href="#principles">查看工作方式 <span aria-hidden="true">↓</span></a>
+        </div>
       </section>
 
       <section class="section" id="spaces" aria-labelledby="spaces-title">
         <div class="section-heading">
-          <div><p class="section-number">01 / PROJECT SPACES</p><h2 id="spaces-title">知识与实践，各有自己的空间。</h2></div>
-          <p class="section-note">公开仓积累可分享的知识，私有仓承载个人实践。两者共同服务长期的上下文积累。</p>
+          <div><p class="section-number">01 / TWO SIDES OF CONTEXT</p><h2 id="spaces-title">一体两面：知识可以共享，上下文必须自持。</h2></div>
+          <p class="section-note">公开的是方法、研究与可复用成果；个人数据与具体环境留在个人侧。两边用同一套验证方法相互成就。</p>
         </div>
         <div class="spaces">
           <article class="space" aria-labelledby="public-title">
-            <div class="space-meta"><span class="space-label">KNOWLEDGE &amp; LEARNING</span><span class="visibility">公开知识空间</span></div>
+            <div class="space-meta"><span class="space-label">OPEN KNOWLEDGE</span><span class="visibility">开放知识库</span></div>
             <h3 id="public-title">EverAgent</h3>
-            <p class="space-tagline">让研究成为读得懂、用得上的知识。</p>
+            <p class="space-tagline">把研究写成可读、可追溯、可复用的知识。</p>
             <figure class="space-figure">
-              <a class="space-art" href="assets/everagent-poster.webp" target="_blank" rel="noopener noreferrer" aria-label="在新标签页查看 EverAgent 概念海报大图">
+              <button class="space-art" type="button" data-lightbox="assets/everagent-poster.webp" data-lightbox-alt="EverAgent 学习与研究概念海报：AI、计算机科学、生物学、哲学、心理学、开源研究与工程实践围绕知识工作台连接。" aria-label="放大查看 EverAgent 概念海报">
                 <img src="assets/everagent-poster.webp" width="1086" height="1448" loading="lazy" decoding="async" alt="EverAgent 学习与研究概念海报：AI、计算机科学、生物学、哲学、心理学、开源研究与工程实践围绕知识工作台连接。">
-              </a>
-              <figcaption><span>学习与研究 · 概念海报</span><a href="assets/everagent-poster.webp" target="_blank" rel="noopener noreferrer" aria-label="在新标签页查看 EverAgent 概念海报大图">查看大图 <span aria-hidden="true">↗</span></a></figcaption>
+              </button>
+              <figcaption><span>学习与研究 · 概念海报</span><button class="lightbox-open" type="button" data-lightbox="assets/everagent-poster.webp" data-lightbox-alt="EverAgent 学习与研究概念海报：AI、计算机科学、生物学、哲学、心理学、开源研究与工程实践围绕知识工作台连接。">查看大图 <span aria-hidden="true">↗</span></button></figcaption>
             </figure>
-            <p class="space-goal">借助 AI Agent 研究领域、概念与原始材料，形成高质量报告、可运行实验和知识索引。阅读之后产生的新问题，成为下一轮探索的起点。</p>
-            <h4>长期关注</h4>
+            <p class="space-goal">从原始材料到独立阅读的报告、可运行实验和知识索引，把每一次研究都变成他人能够检查、理解与继续使用的开放资产。</p>
+            <h4>如何积累开放知识</h4>
             <ul class="focus-list">
               <li><strong>有证据的研究</strong><p>真读原文，区分事实与推断；关键结论能追溯到来源，报告能独立阅读。</p></li>
               <li><strong>能运行的实践</strong><p>用低成本、小而清楚的 demo 理解机制，保存真实输出与实验笔记。</p></li>
               <li><strong>可复用的知识</strong><p>报告保存完整分析，知识索引串起概念、关联与未解问题。</p></li>
               <li><strong>持续追问与积累</strong><p>按意图选择工作流，按任务读取上下文，把新认识更新回原来的知识位置。</p></li>
             </ul>
-            <div class="space-foot"><div class="topics" aria-label="公开仓的主要工作">
+            <div class="space-foot"><div class="topics" aria-label="开放知识库的主要工作">
               <span>知识研究</span><span>代码实践</span><span>播客学习</span><span>开源研究</span><span>公开资料</span>
             </div></div>
           </article>
 
           <article class="space space-private" aria-labelledby="private-title">
-            <div class="space-meta"><span class="space-label">INFRASTRUCTURE &amp; PRACTICE</span><span class="visibility">私有实践空间</span></div>
+            <div class="space-meta"><span class="space-label">PERSONAL CONTEXT</span><span class="visibility">个人实践底座</span></div>
             <h3 id="private-title">EverAgent-infra</h3>
-            <p class="space-tagline">让实践留下可靠、可复用的经验。</p>
+            <p class="space-tagline">把真实维护变成可靠的个人上下文。</p>
             <figure class="space-figure">
-              <a class="space-art" href="assets/personal-context-tree.webp" target="_blank" rel="noopener noreferrer" aria-label="在新标签页查看 Personal Context 知识之树大图">
+              <button class="space-art" type="button" data-lightbox="assets/personal-context-tree.webp" data-lightbox-alt="Personal Context 知识之树：根基是 Markdown、CLI 和额度资产化，枝叶承载基础设施优化、文档治理、eacli-first 与 Token 额度，树冠指向个人上下文。" aria-label="放大查看 Personal Context 知识之树">
                 <img src="assets/personal-context-tree.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Personal Context 知识之树：根基是 Markdown、CLI 和额度资产化，枝叶承载基础设施优化、文档治理、eacli-first 与 Token 额度，树冠指向个人上下文。">
-              </a>
-              <figcaption><span>个人上下文 · 知识之树</span><a href="assets/personal-context-tree.webp" target="_blank" rel="noopener noreferrer" aria-label="在新标签页查看 Personal Context 知识之树大图">查看大图 <span aria-hidden="true">↗</span></a></figcaption>
+              </button>
+              <figcaption><span>个人上下文 · 知识之树</span><button class="lightbox-open" type="button" data-lightbox="assets/personal-context-tree.webp" data-lightbox-alt="Personal Context 知识之树：根基是 Markdown、CLI 和额度资产化，枝叶承载基础设施优化、文档治理、eacli-first 与 Token 额度，树冠指向个人上下文。">查看大图 <span aria-hidden="true">↗</span></button></figcaption>
             </figure>
-            <p class="space-goal">从个人基础设施的真实维护出发，把问题、判断、操作与验证结果结构化保存。逐步形成用户自持、跨会话与跨工具可复用的 Personal Context。</p>
+            <p class="space-goal">设备、网络、服务与 Agent 运行方式都在真实维护中接受验证。方法可以公开，个人数据与环境细节始终由使用者自持。</p>
             <h4>四条北极星</h4>
             <ul class="focus-list">
               <li><strong>基础设施持续优化</strong><p>由真实需求和故障触发维护，用测量、验证与恢复证据支持变更。</p></li>
@@ -224,7 +259,7 @@
               <li><strong>CLI-first 与产品优化</strong><p>提供 Agent 能高效消费的入口，围绕真实使用、成功率与用户路径改进。</p></li>
               <li><strong>Token Plan 资产化</strong><p>将模型额度用于有价值的研究、实现与评审，留下可复用成果。</p></li>
             </ul>
-            <div class="space-foot"><p class="boundary">方法与经验可以分享，具体个人资料由使用者自持。</p></div>
+            <div class="space-foot"><p class="boundary">公开方法与经验，保留个人边界。</p></div>
           </article>
         </div>
       </section>
@@ -258,14 +293,14 @@
       </section>
 
       <section class="cta" aria-labelledby="explore-title">
-        <div><h2 id="explore-title">继续探索，从公开知识开始。</h2><p>研究报告、可运行实验与学习索引，在公开仓随项目持续积累。</p></div>
-        <a class="button" href="https://github.com/Everloster/EverAgent" target="_blank" rel="noopener noreferrer">探索 EverAgent <span aria-hidden="true">↗</span></a>
+        <div><h2 id="explore-title">从开放知识库，开始下一次探索。</h2><p>研究报告、可运行实验与学习索引，在 EverAgent 持续积累，等待被阅读、验证和再次使用。</p></div>
+        <a class="button" href="https://github.com/Everloster/EverAgent" target="_blank" rel="noopener noreferrer">进入 EverAgent <span aria-hidden="true">↗</span></a>
       </section>
     </main>
 
     <footer>
       <div class="footer-row">
-        <div class="footer-name">EverAgent<span>知识与实践，积累成下一次的起点。</span></div>
+        <div class="footer-name">EverAgent<span>向外分享知识，向内沉淀上下文。</span></div>
         <div class="egg-buttons">
           <button class="egg-trigger" type="button" data-egg="egg-love" aria-controls="egg-love" aria-expanded="false" aria-label="打开关于爱的彩蛋" title="一点私心">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
@@ -276,10 +311,36 @@
         </div>
       </div>
       <div class="egg-message" id="egg-love" hidden><p>因为爱所以学 AI，谨以此献给最爱的人 💛</p></div>
-      <div class="egg-message star" id="egg-star" hidden><p>Make bytedance great again.</p></div>
+      <div class="egg-message star" id="egg-star" hidden><p>愿每一次好奇，都有下一章。</p></div>
     </footer>
   </div>
+
+  <dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-title">
+    <div class="lightbox-shell">
+      <div class="lightbox-top">
+        <p id="lightbox-title">海报预览</p>
+        <button class="lightbox-close" id="lightbox-close" type="button" aria-label="关闭大图预览">×</button>
+      </div>
+      <img class="lightbox-image" id="lightbox-image" src="assets/everagent-poster.webp" alt="">
+      <div class="lightbox-foot">
+        <span>按 Esc 或点击遮罩关闭</span>
+        <a id="lightbox-source" href="assets/everagent-poster.webp" target="_blank" rel="noopener noreferrer">查看原图 <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </dialog>
+
   <script>
+    const progressBar = document.querySelector(".scroll-progress span");
+    const updateProgress = () => {
+      if (!progressBar) return;
+      const available = document.documentElement.scrollHeight - window.innerHeight;
+      const ratio = available > 0 ? Math.min(1, Math.max(0, window.scrollY / available)) : 0;
+      progressBar.style.transform = `scaleX(${ratio})`;
+    };
+    document.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    updateProgress();
+
     document.querySelectorAll("[data-egg]").forEach((button) => {
       const panel = document.getElementById(button.dataset.egg);
       button.addEventListener("click", () => {
@@ -287,6 +348,45 @@
         button.setAttribute("aria-expanded", String(expanded));
         panel.hidden = !expanded;
       });
+    });
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxSource = document.getElementById("lightbox-source");
+    const lightboxClose = document.getElementById("lightbox-close");
+    let lightboxTrigger = null;
+
+    document.querySelectorAll("[data-lightbox]").forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const source = trigger.dataset.lightbox;
+        if (typeof lightbox.showModal !== "function") {
+          window.open(source, "_blank", "noopener,noreferrer");
+          return;
+        }
+        lightboxTrigger = trigger;
+        lightboxImage.src = source;
+        lightboxImage.alt = trigger.dataset.lightboxAlt || "海报大图";
+        lightboxSource.href = source;
+        lightbox.showModal();
+        document.body.classList.add("has-lightbox");
+        lightboxClose.focus();
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && lightbox.open) {
+        event.preventDefault();
+        lightbox.close();
+      }
+    });
+    lightboxClose.addEventListener("click", () => lightbox.close());
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) lightbox.close();
+    });
+    lightbox.addEventListener("close", () => {
+      document.body.classList.remove("has-lightbox");
+      if (lightboxTrigger) lightboxTrigger.focus();
+      lightboxTrigger = null;
     });
   </script>
 </body>
