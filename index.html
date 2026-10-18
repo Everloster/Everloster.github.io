@@ -1,115 +1,293 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EverAgent · 个人学习与研究工作台</title>
-<meta name="description" content="AI 驱动的个人知识库：帮我快速研究一个新领域，产出高质量、带证据的报告，我抽空阅读。">
-<style>
-  :root {
-    --bg: #0f1117; --card: #171a22; --line: #262b36;
-    --fg: #e6e9ef; --muted: #9aa4b2; --accent: #7c9cff; --accent2: #59d3a4;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg); color: var(--fg);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    line-height: 1.6; -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
-
-  header { padding: 90px 0 50px; text-align: center; }
-  .logo { font-size: 15px; letter-spacing: 3px; color: var(--accent2); text-transform: uppercase; }
-  h1 { font-size: 46px; margin: 14px 0 10px; letter-spacing: -1px; }
-  .tagline { font-size: 19px; color: var(--muted); max-width: 620px; margin: 0 auto; }
-
-  .loop {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
-    margin: 34px 0 8px; font-size: 14px; color: var(--muted);
-  }
-  .loop span { background: var(--card); border: 1px solid var(--line); padding: 6px 14px; border-radius: 20px; }
-  .loop b { color: var(--fg); font-weight: 600; }
-
-  section { padding: 40px 0; border-top: 1px solid var(--line); }
-  h2 { font-size: 22px; margin-bottom: 6px; }
-  .sub { color: var(--muted); font-size: 15px; margin-bottom: 24px; }
-
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-  .card {
-    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-    padding: 18px 20px; transition: border-color .2s, transform .2s;
-  }
-  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .card .tag { font-size: 12px; color: var(--accent2); letter-spacing: 1px; }
-  .card h3 { font-size: 17px; margin: 6px 0; }
-  .card p { font-size: 14px; color: var(--muted); }
-  .card .count { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--fg); font-weight: 600; }
-
-  .pillars { display: grid; grid-template-columns: 1fr; gap: 12px; }
-  .pillar { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
-  .pillar b { color: var(--accent); }
-
-  .cta { text-align: center; padding: 46px 0; }
-  .btn {
-    display: inline-block; background: var(--accent); color: #0f1117; font-weight: 700;
-    padding: 13px 30px; border-radius: 28px; font-size: 15px;
-  }
-  .btn:hover { text-decoration: none; opacity: .9; }
-
-  footer { text-align: center; padding: 40px 0 60px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
-  .easter-egg { margin-top: 16px; font-size: 14px; color: var(--accent2); letter-spacing: .5px; opacity: .9; }
-  @media (max-width: 520px) { h1 { font-size: 34px; } header { padding: 60px 0 36px; } }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f1117">
+  <meta name="description" content="EverAgent 与 EverAgent-infra：从公开知识研究到私有基础设施实践，积累可阅读、可追溯、可复用的 Personal Context。">
+  <title>EverAgent · 两个项目空间，一份个人上下文</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f1117; --card: #171a22; --line: #2a303d;
+      --fg: #e6e9ef; --muted: #a2abba; --blue: #7c9cff; --green: #59d3a4;
+      --gold: #e5bc76;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body {
+      margin: 0; background: var(--bg); color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(ellipse 600px 450px at 50% 0, #7c9cff0b, transparent);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
+    .wrap { width: min(1120px, 100%); margin: 0 auto; padding: 0 32px; }
+    .skip-link { position: absolute; left: 16px; top: -80px; padding: 8px 16px; background: var(--card); z-index: 2; }
+    .skip-link:focus { top: 16px; }
+    .topbar { min-height: 88px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-size: 17px; font-weight: 650; letter-spacing: .3px; }
+    .brand svg { width: 25px; height: 25px; color: var(--green); }
+    .nav { display: flex; gap: 26px; color: var(--muted); font-size: 13px; }
+    .nav a:hover { color: var(--fg); }
+    .hero { text-align: center; padding: 88px 0 70px; }
+    .eyebrow { margin: 0 0 18px; color: var(--green); font-size: 11px; font-weight: 650; letter-spacing: 2.2px; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(29px, 4.8vw, 57px); font-weight: 650; line-height: 1.3; letter-spacing: -1.7px; }
+    h1 span { color: var(--green); }
+    .hero-copy { margin: 24px auto 0; max-width: 630px; font-size: 17px; color: var(--muted); }
+    .workflow { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; list-style: none; padding: 0; margin: 30px 0 0; font-size: 12px; color: var(--muted); }
+    .workflow li { padding: 6px 14px; border: 1px solid var(--line); border-radius: 7px; background: #171a2270; }
+    .workflow b { font-weight: 500; color: var(--fg); }
+    .hero-link { display: inline-flex; align-items: center; gap: 9px; margin-top: 28px; color: var(--blue); font-size: 13px; }
+    .section { padding: 54px 0; border-top: 1px solid var(--line); }
+    .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 27px; }
+    .section-number { margin: 0 0 7px; color: var(--muted); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: 1.7px; }
+    h2 { margin: 0; font-size: 25px; font-weight: 600; letter-spacing: -.5px; }
+    .section-note { margin: 0; color: var(--muted); font-size: 13px; max-width: 340px; }
+    .spaces { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .space { --accent: var(--blue); padding: 29px; background: var(--card); border: 1px solid var(--line); border-radius: 15px; display: flex; flex-direction: column; }
+    .space-private { --accent: var(--green); }
+    .space-meta { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .space-label { color: var(--accent); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: 1.1px; }
+    .visibility { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border: 1px solid var(--line); border-radius: 20px; color: var(--muted); font-size: 11px; }
+    .visibility::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+    .space h3 { margin: 21px 0 4px; font-size: 29px; font-weight: 600; letter-spacing: -.6px; }
+    .space-tagline { margin: 0; color: var(--accent); font-size: 14px; }
+    .space-figure { margin: 24px 0 0; }
+    .space-art { display: flex; align-items: center; justify-content: center; height: 320px; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #0b101a; transition: border-color .15s; }
+    .space-art:hover { border-color: var(--accent); }
+    .space-art img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .space-figure figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 9px; color: var(--muted); font-size: 11px; }
+    .space-figure figcaption a { flex-shrink: 0; color: var(--accent); }
+    .space-figure figcaption a:hover { text-decoration: underline; }
+    .space-goal { margin: 20px 0 0; color: var(--muted); font-size: 14px; }
+    .space h4 { margin: 25px 0 12px; font-size: 12px; font-weight: 600; color: var(--fg); }
+    .focus-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 13px; }
+    .focus-list li { padding-left: 13px; border-left: 2px solid var(--accent); }
+    .focus-list strong { display: block; font-size: 13px; font-weight: 600; }
+    .focus-list p { margin: 3px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .space-foot { margin-top: auto; padding-top: 24px; }
+    .topics { display: flex; flex-wrap: wrap; gap: 6px; }
+    .topics span { font-size: 10px; color: var(--muted); border: 1px solid var(--line); padding: 4px 8px; border-radius: 5px; }
+    .boundary { margin: 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 11px; color: var(--muted); }
+    .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .principle { padding: 23px; border: 1px solid var(--line); border-radius: 12px; background: #171a2270; }
+    .principle-index { color: var(--green); font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .principle h3 { margin: 14px 0 9px; font-size: 17px; font-weight: 600; }
+    .principle p { margin: 0; color: var(--muted); font-size: 13px; }
+    .context-path { display: flex; justify-content: center; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 24px; padding: 15px; color: var(--muted); font-size: 11px; }
+    .context-path span { color: var(--fg); }
+    .lessons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 30px; }
+    .lesson { padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .lesson h3 { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
+    .lesson h3 span { display: inline-block; margin-right: 10px; font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; color: var(--green); }
+    .lesson p { margin: 0; color: var(--muted); font-size: 13px; }
+    .lesson .takeaway { margin-top: 9px; color: var(--fg); }
+    .cta { display: flex; justify-content: space-between; align-items: center; gap: 32px; padding: 36px; margin: 9px 0 54px; border: 1px solid #7c9cff40; border-radius: 15px; background: linear-gradient(120deg, #7c9cff0d, #59d3a403); }
+    .cta h2 { font-size: 23px; }
+    .cta p { margin: 8px 0 0; color: var(--muted); font-size: 13px; max-width: 500px; }
+    .button { display: inline-flex; flex-shrink: 0; align-items: center; gap: 12px; padding: 12px 19px; border-radius: 7px; color: var(--bg); background: var(--blue); font-size: 13px; font-weight: 650; transition: background .15s; }
+    .button:hover { background: #9ab2ff; }
+    footer { border-top: 1px solid var(--line); padding: 26px 0 35px; color: var(--muted); font-size: 11px; }
+    .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .footer-name { color: var(--fg); font-size: 12px; }
+    .footer-name span { margin-left: 12px; color: var(--muted); font-size: 11px; }
+    .egg-buttons { display: flex; align-items: center; gap: 9px; }
+    .egg-trigger { width: 32px; height: 32px; padding: 7px; display: inline-flex; align-items: center; justify-content: center; background: none; color: var(--muted); border: 1px solid var(--line); border-radius: 50%; cursor: pointer; transition: color .15s, border-color .15s; }
+    .egg-trigger svg { width: 15px; height: 15px; }
+    .egg-trigger:hover, .egg-trigger[aria-expanded="true"] { color: var(--gold); border-color: var(--gold); }
+    .egg-trigger.star:hover, .egg-trigger.star[aria-expanded="true"] { color: var(--green); border-color: var(--green); }
+    .egg-message { margin: 16px 0 0; text-align: center; color: var(--gold); font-size: 13px; letter-spacing: .3px; }
+    .egg-message.star { color: var(--green); }
+    .egg-message p { margin: 0; }
+    @media (max-width: 850px) {
+      .spaces { grid-template-columns: 1fr; }
+      .principles { gap: 12px; }
+      .principle { padding: 18px; }
+      .section-heading { align-items: flex-start; }
+      .section-note { max-width: 280px; }
+      .space-foot { margin-top: 0; }
+      .space-art { height: auto; }
+      .space-art img { height: auto; max-height: 440px; }
+      .cta { padding: 28px; }
+    }
+    @media (max-width: 620px) {
+      .wrap { padding: 0 24px; }
+      .topbar { min-height: 73px; gap: 16px; }
+      .brand { font-size: 15px; gap: 8px; }
+      .brand svg { width: 22px; height: 22px; }
+      .nav { gap: 16px; font-size: 11px; }
+      .hero { padding: 58px 0 45px; }
+      h1 { letter-spacing: -.8px; }
+      .hero-copy { font-size: 14px; margin-top: 20px; }
+      .eyebrow { font-size: 10px; letter-spacing: 1.7px; }
+      .workflow { gap: 7px; margin-top: 24px; font-size: 10px; }
+      .workflow li { padding: 5px 9px; }
+      .section { padding: 37px 0; }
+      .section-heading { display: block; margin-bottom: 22px; }
+      .section-note { margin-top: 10px; max-width: none; font-size: 12px; }
+      h2 { font-size: 23px; }
+      .space { padding: 23px; }
+      .space h3 { font-size: 27px; }
+      .space-art img { max-height: 360px; }
+      .principles, .lessons { grid-template-columns: 1fr; }
+      .principle { padding: 21px; }
+      .principle h3 { margin-top: 9px; }
+      .context-path { gap: 9px; padding: 5px 0; font-size: 10px; }
+      .lessons { gap: 0; }
+      .lesson { padding: 20px 0; }
+      .cta { display: block; padding: 25px; margin-bottom: 36px; }
+      .cta .button { margin-top: 22px; }
+      .footer-name span { display: block; margin-left: 0; margin-top: 3px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
+  <a class="skip-link" href="#main">跳到正文</a>
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand" href="#vision" aria-label="EverAgent 首页">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 2 9 5-9 5-9-5 9-5Z" stroke="currentColor" stroke-width="1.5"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5" stroke="currentColor" stroke-width="1.5"/></svg>
+        EverAgent
+      </a>
+      <nav class="nav" aria-label="页面导航">
+        <a href="#spaces">项目空间</a>
+        <a href="#notes">实践经验</a>
+      </nav>
+    </header>
 
-  <header>
-    <div class="logo">EverAgent</div>
-    <h1>个人学习与研究工作台</h1>
-    <p class="tagline">AI 帮我快速研究一个新领域或概念，产出高质量、带证据的报告，我抽空阅读。本质是一个知识库，被「怎么做好研究」驱动。</p>
-    <div class="loop">
-      <span>我：<b>「帮我学 X」</b></span>
-      <span>AI：<b>研究并归档</b></span>
-      <span>我：<b>抽空读报告</b></span>
-      <span>有新问题：<b>继续问</b></span>
-    </div>
-  </header>
+    <main id="main">
+      <section class="hero" id="vision" aria-labelledby="vision-title">
+        <p class="eyebrow">共同愿景 · Personal Context</p>
+        <h1 id="vision-title">两个项目空间，<br><span>一份持续生长的上下文。</span></h1>
+        <p class="hero-copy">从知识研究到真实实践，把经过验证的经验积累下来，供人阅读，也让未来的 AI Agent 持续复用。</p>
+        <ol class="workflow" aria-label="持续积累的工作循环">
+          <li>01 <b>探索问题</b></li>
+          <li>02 <b>阅读与实践</b></li>
+          <li>03 <b>验证并沉淀</b></li>
+          <li>04 <b>按需复用</b></li>
+        </ol>
+        <a class="hero-link" href="#spaces">认识这两个空间 <span aria-hidden="true">↓</span></a>
+      </section>
 
-  <section>
-    <h2>三个支撑</h2>
-    <p class="sub">先规定怎么读、怎么查、怎么验证，再谈输出。</p>
-    <div class="pillars">
-      <div class="pillar"><b>方法论</b>　—　让 AI 真读原文、标注证据、不编造；知识截止后的事实必须联网核实。</div>
-      <div class="pillar"><b>知识层</b>　—　每个领域的 reports（读的东西）+ wiki（概念 / 实体 / 综合 / 未解问题）。</div>
-      <div class="pillar"><b>画像层</b>　—　记录会什么、偏好什么、覆盖与缺口，让 AI 不重复讲已会的、知道下一步学什么。</div>
-    </div>
-  </section>
+      <section class="section" id="spaces" aria-labelledby="spaces-title">
+        <div class="section-heading">
+          <div><p class="section-number">01 / PROJECT SPACES</p><h2 id="spaces-title">知识与实践，各有自己的空间。</h2></div>
+          <p class="section-note">公开仓积累可分享的知识，私有仓承载个人实践。两者共同服务长期的上下文积累。</p>
+        </div>
+        <div class="spaces">
+          <article class="space" aria-labelledby="public-title">
+            <div class="space-meta"><span class="space-label">KNOWLEDGE &amp; LEARNING</span><span class="visibility">公开知识空间</span></div>
+            <h3 id="public-title">EverAgent</h3>
+            <p class="space-tagline">让研究成为读得懂、用得上的知识。</p>
+            <figure class="space-figure">
+              <a class="space-art" href="assets/everagent-poster.webp" target="_blank" rel="noopener noreferrer" aria-label="在新标签页查看 EverAgent 概念海报大图">
+                <img src="assets/everagent-poster.webp" width="1086" height="1448" loading="lazy" decoding="async" alt="EverAgent 学习与研究概念海报：AI、计算机科学、生物学、哲学、心理学、开源研究与工程实践围绕知识工作台连接。">
+              </a>
+              <figcaption><span>学习与研究 · 概念海报</span><a href="assets/everagent-poster.webp" target="_blank" rel="noopener noreferrer" aria-label="在新标签页查看 EverAgent 概念海报大图">查看大图 <span aria-hidden="true">↗</span></a></figcaption>
+            </figure>
+            <p class="space-goal">借助 AI Agent 研究领域、概念与原始材料，形成高质量报告、可运行实验和知识索引。阅读之后产生的新问题，成为下一轮探索的起点。</p>
+            <h4>长期关注</h4>
+            <ul class="focus-list">
+              <li><strong>有证据的研究</strong><p>真读原文，区分事实与推断；关键结论能追溯到来源，报告能独立阅读。</p></li>
+              <li><strong>能运行的实践</strong><p>用低成本、小而清楚的 demo 理解机制，保存真实输出与实验笔记。</p></li>
+              <li><strong>可复用的知识</strong><p>报告保存完整分析，知识索引串起概念、关联与未解问题。</p></li>
+              <li><strong>持续追问与积累</strong><p>按意图选择工作流，按任务读取上下文，把新认识更新回原来的知识位置。</p></li>
+            </ul>
+            <div class="space-foot"><div class="topics" aria-label="公开仓的主要工作">
+              <span>知识研究</span><span>代码实践</span><span>播客学习</span><span>开源研究</span><span>公开资料</span>
+            </div></div>
+          </article>
 
-  <section>
-    <h2>六类工作模式</h2>
-    <p class="sub">按「意图」路由：识别想干什么 → 判定属于哪一类 → 独立工作。</p>
-    <div class="grid">
-      <div class="card"><div class="tag">A · 知识研究</div><h3>🤖 AI / 💻 CS / 📚 哲学 / 🧠 心理 / 🧬 生物</h3><p>对话启发式学习，真读原文，产出高质量报告。</p><span class="count">180+ 篇报告</span></div>
-      <div class="card"><div class="tag">B · 代码实践</div><h3>⚗️ AI Practice</h3><p>各类 AI 技术的低成本可运行 demo + 配套教学笔记。</p></div>
-      <div class="card"><div class="tag">C · 播客学习</div><h3>🎙️ Podcast</h3><p>发链接 → 本地转写 → 润色 → 总结/讨论 → 报告。</p></div>
-      <div class="card"><div class="tag">D · 开源研究</div><h3>📦 GitHub Trending</h3><p>发 repo 链接 → 输出研究报告；trending 日/周/月汇总。</p></div>
-      <div class="card"><div class="tag">E · 上网冲浪</div><h3>🏄 Web Surfing</h3><p>发上网需求 → 抓公开数据 → 产出清单/报告；站点技能沉淀。</p></div>
-      <div class="card"><div class="tag">F · 基础设施</div><h3>🛠️ Infra</h3><p>设备与自建服务的安装、修复、排障；命令级可复现沉淀。</p></div>
-    </div>
-  </section>
+          <article class="space space-private" aria-labelledby="private-title">
+            <div class="space-meta"><span class="space-label">INFRASTRUCTURE &amp; PRACTICE</span><span class="visibility">私有实践空间</span></div>
+            <h3 id="private-title">EverAgent-infra</h3>
+            <p class="space-tagline">让实践留下可靠、可复用的经验。</p>
+            <figure class="space-figure">
+              <a class="space-art" href="assets/personal-context-tree.webp" target="_blank" rel="noopener noreferrer" aria-label="在新标签页查看 Personal Context 知识之树大图">
+                <img src="assets/personal-context-tree.webp" width="1672" height="941" loading="lazy" decoding="async" alt="Personal Context 知识之树：根基是 Markdown、CLI 和额度资产化，枝叶承载基础设施优化、文档治理、eacli-first 与 Token 额度，树冠指向个人上下文。">
+              </a>
+              <figcaption><span>个人上下文 · 知识之树</span><a href="assets/personal-context-tree.webp" target="_blank" rel="noopener noreferrer" aria-label="在新标签页查看 Personal Context 知识之树大图">查看大图 <span aria-hidden="true">↗</span></a></figcaption>
+            </figure>
+            <p class="space-goal">从个人基础设施的真实维护出发，把问题、判断、操作与验证结果结构化保存。逐步形成用户自持、跨会话与跨工具可复用的 Personal Context。</p>
+            <h4>四条北极星</h4>
+            <ul class="focus-list">
+              <li><strong>基础设施持续优化</strong><p>由真实需求和故障触发维护，用测量、验证与恢复证据支持变更。</p></li>
+              <li><strong>Markdown 治理</strong><p>文档规范、简洁、来源一致；当前事实、详细参考和历史记录各归其位。</p></li>
+              <li><strong>CLI-first 与产品优化</strong><p>提供 Agent 能高效消费的入口，围绕真实使用、成功率与用户路径改进。</p></li>
+              <li><strong>Token Plan 资产化</strong><p>将模型额度用于有价值的研究、实现与评审，留下可复用成果。</p></li>
+            </ul>
+            <div class="space-foot"><p class="boundary">方法与经验可以分享，具体个人资料由使用者自持。</p></div>
+          </article>
+        </div>
+      </section>
 
-  <div class="cta">
-    <a class="btn" href="https://github.com/Everloster/EverAgent">在 GitHub 上探索 EverAgent →</a>
+      <section class="section" id="principles" aria-labelledby="principles-title">
+        <div class="section-heading">
+          <div><p class="section-number">02 / WORKING PRINCIPLES</p><h2 id="principles-title">把愿景落到三条做事规范。</h2></div>
+          <p class="section-note">保存好原料，提供合适的使用入口，再通过真实工作持续积累。</p>
+        </div>
+        <div class="principles">
+          <article class="principle"><span class="principle-index">01 / WRITE</span><h3>规范的 Markdown</h3><p>先把事实写清楚。内容简洁、结构明确、来源可追溯，每项事实有自己的维护位置。</p></article>
+          <article class="principle"><span class="principle-index">02 / USE</span><h3>高效的 CLI</h3><p>让 Agent 先定位，再按需读取和操作。优先成熟能力，CLI、脚本与代码各用所长。</p></article>
+          <article class="principle"><span class="principle-index">03 / BUILD</span><h3>算力变成长期资产</h3><p>围绕真实问题安排研究、编码与评审，以可复用产物和验收衡量模型额度的价值。</p></article>
+        </div>
+        <div class="context-path" aria-label="上下文的维护方式">
+          <span>分域自持</span><b aria-hidden="true">·</b><span>统一发现</span><b aria-hidden="true">·</b><span>按需读取</span><b aria-hidden="true">·</b><span>结果回源</span>
+        </div>
+      </section>
+
+      <section class="section" id="notes" aria-labelledby="notes-title">
+        <div class="section-heading">
+          <div><p class="section-number">03 / NOTES FROM PRACTICE</p><h2 id="notes-title">走过的弯路，也留下来。</h2></div>
+          <p class="section-note">项目的价值也来自做事过程：记住问题如何发生，以及下次如何做得更好。</p>
+        </div>
+        <div class="lessons">
+          <article class="lesson"><h3><span>01</span>上下文越堆越重</h3><p>入口塞进历史、手册和完整档案，一次提问就承担了过多的阅读成本。</p><p class="takeaway">入口保持小，详细知识保持全；按任务加载，用局部更新保留经验。</p></article>
+          <article class="lesson"><h3><span>02</span>框架长得比需求快</h3><p>更多命令、更多版本和更复杂的编排，很容易挤掉真正的用户问题。</p><p class="takeaway">先复用成熟能力；有证据的缺口才新增实现，以实际收益决定下一步。</p></article>
+          <article class="lesson"><h3><span>03</span>验收要走真实路径</h3><p>格式检查和质量门禁解决一部分问题，实际使用与恢复仍需要自己的证据。</p><p class="takeaway">验证真实用户路径，记录结果、适用条件与尚未确认的部分。</p></article>
+          <article class="lesson"><h3><span>04</span>自动化需要明确边界</h3><p>超时可能意味着结果未知，盲目重试会造成重复执行或重复产出。</p><p class="takeaway">保留任务证据，先核对原执行结果，再在授权范围内恢复。</p></article>
+        </div>
+      </section>
+
+      <section class="cta" aria-labelledby="explore-title">
+        <div><h2 id="explore-title">继续探索，从公开知识开始。</h2><p>研究报告、可运行实验与学习索引，在公开仓随项目持续积累。</p></div>
+        <a class="button" href="https://github.com/Everloster/EverAgent" target="_blank" rel="noopener noreferrer">探索 EverAgent <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-row">
+        <div class="footer-name">EverAgent<span>知识与实践，积累成下一次的起点。</span></div>
+        <div class="egg-buttons">
+          <button class="egg-trigger" type="button" data-egg="egg-love" aria-controls="egg-love" aria-expanded="false" aria-label="打开关于爱的彩蛋" title="一点私心">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="egg-trigger star" type="button" data-egg="egg-star" aria-controls="egg-star" aria-expanded="false" aria-label="打开另一枚彩蛋" title="另一枚彩蛋">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="egg-message" id="egg-love" hidden><p>因为爱所以学 AI，谨以此献给最爱的人 💛</p></div>
+      <div class="egg-message star" id="egg-star" hidden><p>Make bytedance great again.</p></div>
+    </footer>
   </div>
-
-  <footer>
-    EverAgent · 由 AI Agent 驱动的个人知识库　·　<a href="https://github.com/Everloster/EverAgent">github.com/Everloster/EverAgent</a>
-    <div class="easter-egg">因为爱所以学 AI，谨以此献给 Everloster 最爱的胖胖 💛</div>
-  </footer>
-
-</div>
+  <script>
+    document.querySelectorAll("[data-egg]").forEach((button) => {
+      const panel = document.getElementById(button.dataset.egg);
+      button.addEventListener("click", () => {
+        const expanded = button.getAttribute("aria-expanded") !== "true";
+        button.setAttribute("aria-expanded", String(expanded));
+        panel.hidden = !expanded;
+      });
+    });
+  </script>
 </body>
 </html>
